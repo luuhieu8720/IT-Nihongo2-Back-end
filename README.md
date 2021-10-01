@@ -1,2 +1,2 @@
-# IT-Nihongo2-Back-end
+# IT-Nihongo2
 IT nihongo 2 Backend Spring Boot
