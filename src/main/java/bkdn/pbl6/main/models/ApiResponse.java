@@ -2,20 +2,23 @@ package bkdn.pbl6.main.models;
 
 public class ApiResponse {
 
-	private String success;
+	private Boolean success;
 	private Object value;
 
-	public ApiResponse(String success, Object value) {
-		super();
+	public ApiResponse(Boolean succes) {
+		this(succes, null);
+	}
+
+	public ApiResponse(Boolean success, Object value) {
 		this.success = success;
 		this.value = value;
 	}
 
-	public String getSuccess() {
+	public Boolean getSuccess() {
 		return success;
 	}
 
-	public void setSuccess(String success) {
+	public void setSuccess(Boolean success) {
 		this.success = success;
 	}
 
@@ -25,12 +28,6 @@ public class ApiResponse {
 
 	public void setValue(Object value) {
 		this.value = value;
-	}
-
-	@Override
-	public String toString() {
-		return "[" + (success != null ? "success=" + success + "," : "") + (value != null ? "value=" + value : "")
-				+ "]";
 	}
 
 }
