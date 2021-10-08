@@ -6,6 +6,6 @@ public interface AuthenticationService {
 
 	public AccountModel login(String email, String password);
 	
-	public Boolean logout(AccountModel model);
+	public Boolean logout(String email, String token);
 
 }

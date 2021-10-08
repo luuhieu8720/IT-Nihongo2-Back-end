@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bkdn.pbl6.main.models.AccountModel;
+import bkdn.pbl6.main.models.User;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -11,23 +12,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Autowired
 	private TokenService tokenService;
 
-	private String userToken = null;
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public AccountModel login(String email, String password) {
-		if (email.equals("user") && password.equals("user") && userToken == null) {
-			userToken = tokenService.newToken();
-			return new AccountModel(email, userToken);
-		}
-		return null;
+		User user = userService.findByEmail(email);
+		if (user == null)
+			return null;
+		System.out.println(user);
+		if (!user.getPassword().equals(password))
+			return null;
+		if (tokenService.isHasId(user.getId()))
+			return null;
+		return new AccountModel(email, tokenService.newToken(user.getId()));
 	}
 
 	@Override
-	public Boolean logout(AccountModel model) {
-		if (model.getToken().equals(userToken) && model.getEmail().equals("user")) {
-			userToken = null;
+	public Boolean logout(String email, String token) {
+		User user = userService.findByEmail(email);
+		if (tokenService.getId(token) == user.getId())
 			return true;
-		}
 		return false;
 	}
 
