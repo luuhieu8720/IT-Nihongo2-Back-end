@@ -1,50 +1,75 @@
 package bkdn.pbl6.main.services;
 
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bkdn.pbl6.main.models.User;
+import bkdn.pbl6.main.entities.AccountEntity;
+import bkdn.pbl6.main.entities.Role;
+import bkdn.pbl6.main.jwt.JwtTokenProvider;
+import bkdn.pbl6.main.models.Account;
+import bkdn.pbl6.main.repositories.AccountRepository;
+import bkdn.pbl6.main.utils.EncrytedPasswordUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-	private ArrayList<User> users = new ArrayList<User>();
-	private AtomicInteger atomicInteger = new AtomicInteger();
+	@Autowired
+	private AccountRepository accountRepository;
+
+	@Autowired
+	private JwtTokenProvider tokenProvider;
+
+	@Autowired
+	private MailService mailService;
 
 	@Override
-	public User add(User user) {
-		for (User u : users) {
-			if (user.getEmail().equals(u.getEmail())) {
-				return null;
-			}
+	public Account signup(Account account) throws Exception {
+		if (accountRepository.findByEmail(account.getEmail()) != null) {
+			throw new Exception("Email already exists!");
 		}
-		user.setId(atomicInteger.incrementAndGet());
-		users.add(user);
-		System.out.println(users.toString());
-		return user;
+		account.setPassword(EncrytedPasswordUtils.encrytedPassword(account.getPassword()));
+		AccountEntity accountEntity = new AccountEntity(account);
+		accountEntity.setRole(Role.User);
+		accountEntity.setValication(false);
+
+		String token = tokenProvider.generateSignupToken(account);
+		account.setToken(token);
+		mailService.sendSignupMail(account);
+
+		accountEntity = accountRepository.save(accountEntity);
+		return new Account(accountEntity);
 	}
 
 	@Override
-	public User findById(Integer id) {
-		for (int i = 0; i < users.size(); ++i) {
-			if (users.get(i).getId() == id) {
-				System.out.println("Thu tu: " + i + ", Id: " + id);
-				return users.get(i);
-			}
+	public Account signupFinish(String token) throws Exception {
+		String email;
+		try {
+			email = tokenProvider.getEmailFromJwt(token);
+		} catch (ExpiredJwtException e) {
+			throw new Exception("Expired!");
 		}
-		return null;
+		AccountEntity accountEntity = accountRepository.findByEmail(email);
+		accountEntity.setValication(true);
+		accountRepository.save(accountEntity);
+		return new Account(accountEntity);
 	}
-	
+
 	@Override
-	public User findByEmail(String email) {
-		for (User user : users) {
-			if (user.getEmail().equals(email)) {
-				return user;
-			}
+	public Account signupRe(String email) throws Exception {
+		AccountEntity accountEntity = accountRepository.findByEmail(email);
+		if (accountEntity == null) {
+			throw new Exception("Email does not exist!");
 		}
-		return null;
+		if (accountEntity.getValication()) {
+			throw new Exception("Validated!");
+		}
+
+		Account account = new Account(accountEntity);
+		account.setToken(tokenProvider.generateSignupToken(account));
+		mailService.sendSignupMail(account);
+
+		return account;
 	}
 
 }

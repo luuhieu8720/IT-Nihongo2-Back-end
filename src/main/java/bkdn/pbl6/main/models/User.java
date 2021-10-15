@@ -1,11 +1,19 @@
 package bkdn.pbl6.main.models;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	private Integer id;
 	private String name;
 	private String email;
 	private String password;
+
+	public User() {
+	}
 
 	public User(Integer id, String name, String email, String password) {
 		this.id = id;
@@ -44,6 +52,24 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(email, id, name, password);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(email, other.email) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(password, other.password);
 	}
 
 	@Override

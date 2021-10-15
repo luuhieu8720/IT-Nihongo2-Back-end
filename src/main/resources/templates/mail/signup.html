@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/3.3.1-1/jquery.min.js"></script>
+<title>Hello</title>
+</head>
+<body>
+	<div>
+		<h2 th:text="${'Welcome ' + user.getNickname()}"></h2>
+	</div>
+	<div>Welcome to our service! You almost done! Just one more step!</div>
+	<div>
+		<h2>Click button to finish the sign-up!</h2>
+	</div>
+	<form method="post" action="javascript:void(0)" onsubmit="submit()">
+		<input type="submit" value="Click here!">
+	</form>
+	
+<script th:inline="javascript">
+var token = /*[[${user.getToken()}]]*/ null;
+var host = "http://localhost:8080";
+var successUrl = null;
+var failUrl = null;
+function send() {
+	var request = {
+			"url": host + "/api/noauth/signup/finish",
+			"method": "POST",
+			"timeout": 0,
+			"data": '{"token":"'+token+'"}',
+	}
+	$.ajax(request).done(receive);
+}
+function receive(response) {
+	console.log(response);
+	if (response.body.success) {
+		//if (successUrl) window.open(succesUrl, '_blank').focus();
+		//else 
+		alert("You got it! Let sign-in!");
+	} else {
+		//if (failUrl) window.open(failUrl, '_blank').focus();
+		//else 
+		alert(response.body.value);
+	}
+}
+function submit(){
+	if (token) {
+		send();
+	}
+}
+</script>
+</body>
+</html>
