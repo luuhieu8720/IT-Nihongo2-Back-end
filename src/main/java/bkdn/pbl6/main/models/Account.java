@@ -9,19 +9,21 @@ import bkdn.pbl6.main.entities.Role;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 
-	private String nickname;
+	private String username;
 	private String email;
 	private String password;
+	private String name;
 	private Role role;
 	private String token;
 
 	public Account() {
 	}
 
-	public Account(String nickname, String email, String password, Role role, String token) {
-		this.nickname = nickname;
+	public Account(String username, String email, String password, String name, Role role, String token) {
+		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.name = name;
 		this.role = role;
 		this.token = token;
 	}
@@ -31,15 +33,16 @@ public class Account {
 	}
 
 	public Account(AccountEntity accountEntity) {
-		this(accountEntity.getNickname(), accountEntity.getEmail(), "", accountEntity.getRole(), "");
+		this(accountEntity.getUsername(), accountEntity.getEmail(), "", accountEntity.getName(),
+				accountEntity.getRole(), "");
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -56,6 +59,14 @@ public class Account {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Role getRole() {
@@ -76,8 +87,8 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "AccountModel [nickname=" + nickname + ", email=" + email + ", password=" + password + ", role=" + role
-				+ ", token=" + token + "]";
+		return "Account [username=" + username + ", email=" + email + ", password=" + password + ", name=" + name
+				+ ", role=" + role + ", token=" + token + "]";
 	}
 
 }

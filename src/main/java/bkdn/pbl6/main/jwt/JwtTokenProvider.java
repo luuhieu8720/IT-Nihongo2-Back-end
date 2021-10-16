@@ -23,7 +23,7 @@ public class JwtTokenProvider {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + expiration);
 		return Jwts.builder()
-				.setSubject(Long.toString(accountModel.getAccount().getId()))
+				.setSubject(accountModel.getAccount().getId())
 				.setIssuedAt(now)
 				.setExpiration(expiryDate)
 				.signWith(SignatureAlgorithm.HS512, secretKey)
@@ -41,15 +41,7 @@ public class JwtTokenProvider {
 				.compact();
 	}
 
-	public Long getUserIdFromJWT(String token) {
-		Claims claims = Jwts.parser()
-				.setSigningKey(secretKey)
-				.parseClaimsJws(token)
-				.getBody();
-		return Long.parseLong(claims.getSubject());
-	}
-	
-	public String getEmailFromJwt(String token) {
+	public String getStringFromJWT(String token) {
 		Claims claims = Jwts.parser()
 				.setSigningKey(secretKey)
 				.parseClaimsJws(token)

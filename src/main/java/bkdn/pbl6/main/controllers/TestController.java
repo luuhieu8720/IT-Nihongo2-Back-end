@@ -18,7 +18,7 @@ public class TestController {
 
 	@GetMapping(path = "/api/noauth/signup/test")
 	public String testSignup(ModelMap map) {
-		map.addAttribute("user", new Account(null, null, null, null, "token"));
+		map.addAttribute("user", new Account(null, null, null, null, null, "token"));
 		return "mail/signup";
 	}
 

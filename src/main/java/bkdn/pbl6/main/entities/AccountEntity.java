@@ -1,74 +1,67 @@
 package bkdn.pbl6.main.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import bkdn.pbl6.main.models.Account;
 
-@Entity
-@Table(name = "account")
+@Document(collection = "account")
 public class AccountEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private String id;
 
-	@Column
-	private String nickname;
+	@Indexed(unique = true)
+	private String username;
 
-	@Column(nullable = false, unique = true)
+	@Indexed(unique = true)
 	private String email;
 
-	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false)
-	private Boolean valication;
+	private String name;
 
-	@Column(nullable = false)
+	private Boolean enable;
+
 	private Role role;
 
-	@Column
-	private Integer idData;
+	private String idData;
 
 	public AccountEntity() {
 	}
 
-	public AccountEntity(Integer id, String nickname, String email, String password, Boolean valication, Role role,
-			Integer idData) {
+	public AccountEntity(String id, String username, String email, String password, String name, Boolean enable,
+			Role role, String idData) {
 		this.id = id;
-		this.nickname = nickname;
+		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.valication = valication;
+		this.name = name;
+		this.enable = enable;
 		this.role = role;
 		this.idData = idData;
 	}
 
 	public AccountEntity(Account account) {
-		this.nickname = account.getNickname();
-		this.email = account.getEmail();
-		this.password = account.getPassword();
+		this(null, account.getUsername(), account.getEmail(), account.getPassword(), account.getName(), true,
+				account.getRole(), null);
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -87,12 +80,20 @@ public class AccountEntity {
 		this.password = password;
 	}
 
-	public Boolean getValication() {
-		return valication;
+	public String getName() {
+		return name;
 	}
 
-	public void setValication(Boolean valication) {
-		this.valication = valication;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getEnable() {
+		return enable;
+	}
+
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
 	}
 
 	public Role getRole() {
@@ -103,18 +104,18 @@ public class AccountEntity {
 		this.role = role;
 	}
 
-	public Integer getIdData() {
+	public String getIdData() {
 		return idData;
 	}
 
-	public void setIdData(Integer idData) {
+	public void setIdData(String idData) {
 		this.idData = idData;
 	}
 
 	@Override
 	public String toString() {
-		return "AccountEntity [id=" + id + ", nickname=" + nickname + ", email=" + email + ", password=" + password
-				+ ", valication=" + valication + ", role=" + role + ", idData=" + idData + "]";
+		return "AccountEntity [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password
+				+ ", name=" + name + ", enable=" + enable + ", role=" + role + ", idData=" + idData + "]";
 	}
 
 }

@@ -30,46 +30,45 @@ public class UserServiceImpl implements UserService {
 		}
 		account.setPassword(EncrytedPasswordUtils.encrytedPassword(account.getPassword()));
 		AccountEntity accountEntity = new AccountEntity(account);
-		accountEntity.setRole(Role.User);
-		accountEntity.setValication(false);
+		accountEntity.setEnable(true);
 
-		String token = tokenProvider.generateSignupToken(account);
-		account.setToken(token);
-		mailService.sendSignupMail(account);
+//		String token = tokenProvider.generateSignupToken(account);
+//		account.setToken(token);
+//		mailService.sendSignupMail(account);
 
 		accountEntity = accountRepository.save(accountEntity);
 		return new Account(accountEntity);
 	}
 
-	@Override
-	public Account signupFinish(String token) throws Exception {
-		String email;
-		try {
-			email = tokenProvider.getEmailFromJwt(token);
-		} catch (ExpiredJwtException e) {
-			throw new Exception("Expired!");
-		}
-		AccountEntity accountEntity = accountRepository.findByEmail(email);
-		accountEntity.setValication(true);
-		accountRepository.save(accountEntity);
-		return new Account(accountEntity);
-	}
-
-	@Override
-	public Account signupRe(String email) throws Exception {
-		AccountEntity accountEntity = accountRepository.findByEmail(email);
-		if (accountEntity == null) {
-			throw new Exception("Email does not exist!");
-		}
-		if (accountEntity.getValication()) {
-			throw new Exception("Validated!");
-		}
-
-		Account account = new Account(accountEntity);
-		account.setToken(tokenProvider.generateSignupToken(account));
-		mailService.sendSignupMail(account);
-
-		return account;
-	}
+//	@Override
+//	public Account signupFinish(String token) throws Exception {
+//		String email;
+//		try {
+//			email = tokenProvider.getEmailFromJwt(token);
+//		} catch (ExpiredJwtException e) {
+//			throw new Exception("Expired!");
+//		}
+//		AccountEntity accountEntity = accountRepository.findByEmail(email);
+//		accountEntity.setValication(true);
+//		accountRepository.save(accountEntity);
+//		return new Account(accountEntity);
+//	}
+//
+//	@Override
+//	public Account signupRe(String email) throws Exception {
+//		AccountEntity accountEntity = accountRepository.findByEmail(email);
+//		if (accountEntity == null) {
+//			throw new Exception("Email does not exist!");
+//		}
+//		if (accountEntity.getValication()) {
+//			throw new Exception("Validated!");
+//		}
+//
+//		Account account = new Account(accountEntity);
+//		account.setToken(tokenProvider.generateSignupToken(account));
+//		mailService.sendSignupMail(account);
+//
+//		return account;
+//	}
 
 }

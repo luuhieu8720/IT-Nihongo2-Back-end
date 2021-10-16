@@ -23,7 +23,7 @@ public class AccountService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //		B1: Kiem tra ton tai email;
-		AccountEntity accountEntity = accountRepository.findByEmail(username);
+		AccountEntity accountEntity = accountRepository.findByUsername(username);
 		if (accountEntity == null) {
 			throw new UsernameNotFoundException("User " + username + " was not found!");
 		}
@@ -40,8 +40,9 @@ public class AccountService implements UserDetailsService {
 		return accountModel;
 	}
 
-	public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
-		Optional<AccountEntity> optional = accountRepository.findById(id.intValue());
+	public UserDetails loadUserById(String id) throws UsernameNotFoundException {
+		System.out.println("Find for "+ id);
+		Optional<AccountEntity> optional = accountRepository.findById(id);
 		if (optional.isEmpty()) {
 			throw new UsernameNotFoundException("User was not found!");
 		}
@@ -55,6 +56,7 @@ public class AccountService implements UserDetailsService {
 		}
 
 		AccountModel accountModel = new AccountModel(accountEntity, authorities);
+		System.out.println(accountModel);
 		return accountModel;
 	}
 

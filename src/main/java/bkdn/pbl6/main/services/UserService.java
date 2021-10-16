@@ -6,8 +6,8 @@ public interface UserService {
 	
 	public Account signup(Account account) throws Exception;
 	
-	public Account signupFinish(String token) throws Exception;
-	
-	public Account signupRe(String email) throws Exception;
+//	public Account signupFinish(String token) throws Exception;
+//	
+//	public Account signupRe(String email) throws Exception;
 
 }

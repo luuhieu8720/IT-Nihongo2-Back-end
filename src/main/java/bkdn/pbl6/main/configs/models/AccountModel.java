@@ -32,7 +32,7 @@ public class AccountModel implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return account.getEmail();
+		return account.getUsername();
 	}
 
 	@Override
