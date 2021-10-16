@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.authorizeRequests().antMatchers("/api/noauth/**").permitAll();
-		http.authorizeRequests().anyRequest().authenticated();
+		http.authorizeRequests().anyRequest().permitAll();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }
