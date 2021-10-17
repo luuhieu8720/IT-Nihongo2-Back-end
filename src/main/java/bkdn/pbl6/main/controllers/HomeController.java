@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +24,7 @@ import bkdn.pbl6.main.services.MailService;
 import bkdn.pbl6.main.services.UserService;
 
 @RestController
-@RequestMapping("/api/noauth")
+@RequestMapping(path = "/api/noauth")
 public class HomeController {
 
 	private String errorBlank = "%1$s must not be blank!";

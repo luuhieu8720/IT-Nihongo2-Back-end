@@ -1,11 +1,17 @@
 package bkdn.pbl6.main.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bkdn.pbl6.main.entities.AccountEntity;
+import bkdn.pbl6.main.entities.DataEntity;
+import bkdn.pbl6.main.entities.Role;
 import bkdn.pbl6.main.models.Account;
+import bkdn.pbl6.main.models.Data;
 import bkdn.pbl6.main.repositories.AccountRepository;
+import bkdn.pbl6.main.repositories.DataRepository;
 import bkdn.pbl6.main.utils.EncryptedPasswordUtils;
 import bkdn.pbl6.main.utils.TimeEncryptorUtils;
 
@@ -19,6 +25,9 @@ public class UserServiceImpl implements UserService {
 	private AccountRepository accountRepository;
 
 	@Autowired
+	private DataRepository dataRepository;
+
+	@Autowired
 	private MailService mailService;
 
 	@Override
@@ -29,7 +38,7 @@ public class UserServiceImpl implements UserService {
 		if (accountRepository.findByUsername(account.getUsername()) != null) {
 			throw new Exception("Username already exists!");
 		}
-		account.setPassword(EncryptedPasswordUtils.encryptedPassword(account.getPassword()));
+		account.setPassword(EncryptedPasswordUtils.encode(account.getPassword()));
 		AccountEntity accountEntity = new AccountEntity(account);
 		accountEntity.setEnable(false);
 		accountEntity = accountRepository.save(accountEntity);
@@ -87,9 +96,11 @@ public class UserServiceImpl implements UserService {
 		if (accountEntity == null) {
 			throw new Exception("Username does not exist!");
 		}
+
 		long rand = System.currentTimeMillis() / 60000 + signupExpiration;
 		String pass = TimeEncryptorUtils.encode(rand) + accountEntity.getId().substring(0, 4);
-		accountEntity.setPassword(EncryptedPasswordUtils.encryptedPassword(pass));
+
+		accountEntity.setPassword(EncryptedPasswordUtils.encode(pass));
 		accountRepository.save(accountEntity);
 
 		Account account = new Account(accountEntity);
@@ -98,6 +109,96 @@ public class UserServiceImpl implements UserService {
 
 		account.setPassword("");
 		return account;
+	}
+
+	@Override
+	public Data get(String username) throws Exception {
+		AccountEntity accountEntity = accountRepository.findByUsername(username);
+		if (accountEntity == null) {
+			throw new Exception("Username does not exist!");
+		}
+		DataEntity dataEntity;
+		if (accountEntity.getIdData() == null) {
+			dataEntity = new DataEntity();
+			dataRepository.save(dataEntity);
+			accountEntity.setIdData(dataEntity.getId());
+		} else {
+			Optional<DataEntity> optional = dataRepository.findById(accountEntity.getId());
+			if (optional.isEmpty()) {
+				Exception e = new Exception("Data not found!");
+				e.printStackTrace();
+				throw e;
+			}
+			dataEntity = optional.get();
+		}
+		return new Data(accountEntity, dataEntity);
+	}
+
+	@Override
+	public Data update(Data data) throws Exception {
+		AccountEntity accountEntity = accountRepository.findByUsername(data.getUsername());
+		if (accountEntity == null) {
+			throw new Exception("Username does not exist!");
+		}
+		DataEntity dataEntity;
+		if (accountEntity.getIdData() == null) {
+			dataEntity = new DataEntity(data);
+			dataRepository.save(dataEntity);
+			accountEntity.setIdData(dataEntity.getId());
+		} else {
+			Optional<DataEntity> optional = dataRepository.findById(accountEntity.getId());
+			if (optional.isEmpty()) {
+				Exception e = new Exception("Data not found!");
+				e.printStackTrace();
+				throw e;
+			}
+			dataEntity = optional.get();
+		}
+
+		if (data.getName() != null) {
+			accountEntity.setName(data.getName());
+			accountEntity = accountRepository.save(accountEntity);
+		}
+
+		if (data.getMale() != null)
+			dataEntity.setMale(data.getMale());
+		if (data.getAddress() != null)
+			dataEntity.setAddress(data.getAddress());
+		if (data.getAvatar() != null)
+			dataEntity.setAvatar(data.getAvatar());
+		if (data.getTelephone() != null)
+			dataEntity.setTelephone(data.getTelephone());
+
+		if (accountEntity.getRole() == Role.Tutor) {
+			if (data.getDegree() != null)
+				dataEntity.setDegree(data.getDegree());
+			if (data.getOffice() != null)
+				dataEntity.setOffice(data.getOffice());
+			if (data.getSpecialty() != null)
+				dataEntity.setSpecialty(data.getSpecialty());
+			if (data.getStudentId() != null)
+				dataEntity.setStudentId(data.getStudentId());
+		}
+		dataEntity = dataRepository.save(dataEntity);
+
+		accountEntity.setEmail("");
+		return new Data(accountEntity, dataEntity);
+	}
+
+	@Override
+	public Boolean updatePassword(String username, String oldPass, String newPass) throws Exception {
+		AccountEntity accountEntity = accountRepository.findByUsername(username);
+		if (accountEntity == null) {
+			throw new Exception("Username does not exist!");
+		}
+		if (!EncryptedPasswordUtils.matches(oldPass, accountEntity.getPassword())) {
+			throw new Exception("Password incorrect!");
+		}
+
+		accountEntity.setPassword(EncryptedPasswordUtils.encode(newPass));
+		accountRepository.save(accountEntity);
+
+		return true;
 	}
 
 }

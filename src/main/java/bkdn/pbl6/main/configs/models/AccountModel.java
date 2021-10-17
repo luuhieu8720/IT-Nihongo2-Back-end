@@ -52,7 +52,7 @@ public class AccountModel implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return account.getEnable();
 	}
 
 	public AccountEntity getAccount() {

@@ -41,7 +41,6 @@ public class AccountService implements UserDetailsService {
 	}
 
 	public UserDetails loadUserById(String id) throws UsernameNotFoundException {
-		System.out.println("Find for "+ id);
 		Optional<AccountEntity> optional = accountRepository.findById(id);
 		if (optional.isEmpty()) {
 			throw new UsernameNotFoundException("User was not found!");
@@ -56,7 +55,6 @@ public class AccountService implements UserDetailsService {
 		}
 
 		AccountModel accountModel = new AccountModel(accountEntity, authorities);
-		System.out.println(accountModel);
 		return accountModel;
 	}
 
