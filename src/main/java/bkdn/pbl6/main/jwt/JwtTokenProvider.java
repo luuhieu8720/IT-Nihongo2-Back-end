@@ -5,7 +5,6 @@ import java.util.Date;
 import org.springframework.stereotype.Component;
 
 import bkdn.pbl6.main.configs.models.AccountModel;
-import bkdn.pbl6.main.models.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,25 +15,12 @@ public class JwtTokenProvider {
 	private final String secretKey = "asdq382cvb";
 
 	private final long expiration = 7776000000l;
-	
-	private final long signupExpiration = 1800000l;
 
 	public String generateToken(AccountModel accountModel) {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + expiration);
 		return Jwts.builder()
 				.setSubject(accountModel.getAccount().getId())
-				.setIssuedAt(now)
-				.setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS512, secretKey)
-				.compact();
-	}
-
-	public String generateSignupToken(Account account) {
-		Date now = new Date();
-		Date expiryDate = new Date(now.getTime() + signupExpiration);
-		return Jwts.builder()
-				.setSubject(account.getEmail())
 				.setIssuedAt(now)
 				.setExpiration(expiryDate)
 				.signWith(SignatureAlgorithm.HS512, secretKey)

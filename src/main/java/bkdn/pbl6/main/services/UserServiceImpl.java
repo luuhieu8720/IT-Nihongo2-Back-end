@@ -4,21 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bkdn.pbl6.main.entities.AccountEntity;
-import bkdn.pbl6.main.entities.Role;
-import bkdn.pbl6.main.jwt.JwtTokenProvider;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.repositories.AccountRepository;
-import bkdn.pbl6.main.utils.EncrytedPasswordUtils;
-import io.jsonwebtoken.ExpiredJwtException;
+import bkdn.pbl6.main.utils.EncryptedPasswordUtils;
+import bkdn.pbl6.main.utils.TimeEncryptorUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private AccountRepository accountRepository;
+	private final long limit = (1 << 24) - 1;
+	private final long signupExpiration = 30;
 
 	@Autowired
-	private JwtTokenProvider tokenProvider;
+	private AccountRepository accountRepository;
 
 	@Autowired
 	private MailService mailService;
@@ -28,47 +26,78 @@ public class UserServiceImpl implements UserService {
 		if (accountRepository.findByEmail(account.getEmail()) != null) {
 			throw new Exception("Email already exists!");
 		}
-		account.setPassword(EncrytedPasswordUtils.encrytedPassword(account.getPassword()));
+		if (accountRepository.findByUsername(account.getUsername()) != null) {
+			throw new Exception("Username already exists!");
+		}
+		account.setPassword(EncryptedPasswordUtils.encryptedPassword(account.getPassword()));
 		AccountEntity accountEntity = new AccountEntity(account);
-		accountEntity.setEnable(true);
-
-//		String token = tokenProvider.generateSignupToken(account);
-//		account.setToken(token);
-//		mailService.sendSignupMail(account);
-
+		accountEntity.setEnable(false);
 		accountEntity = accountRepository.save(accountEntity);
+
+		signupRe(account.getUsername());
+
 		return new Account(accountEntity);
 	}
 
-//	@Override
-//	public Account signupFinish(String token) throws Exception {
-//		String email;
-//		try {
-//			email = tokenProvider.getEmailFromJwt(token);
-//		} catch (ExpiredJwtException e) {
-//			throw new Exception("Expired!");
-//		}
-//		AccountEntity accountEntity = accountRepository.findByEmail(email);
-//		accountEntity.setValication(true);
-//		accountRepository.save(accountEntity);
-//		return new Account(accountEntity);
-//	}
-//
-//	@Override
-//	public Account signupRe(String email) throws Exception {
-//		AccountEntity accountEntity = accountRepository.findByEmail(email);
-//		if (accountEntity == null) {
-//			throw new Exception("Email does not exist!");
-//		}
-//		if (accountEntity.getValication()) {
-//			throw new Exception("Validated!");
-//		}
-//
-//		Account account = new Account(accountEntity);
-//		account.setToken(tokenProvider.generateSignupToken(account));
-//		mailService.sendSignupMail(account);
-//
-//		return account;
-//	}
+	@Override
+	public Account signupFinish(String username, String token) throws Exception {
+		long expr = TimeEncryptorUtils.decode(token.substring(0, 4));
+		if (expr > (System.currentTimeMillis() / 60000)) {
+			throw new Exception("Expirated!");
+		}
+		AccountEntity accountEntity = accountRepository.findByUsername(username);
+		if (accountEntity == null) {
+			throw new Exception("Username does not exist!");
+		}
+		String id = token.substring(4, 8);
+		if (!accountEntity.getId().substring(0, 4).equals(id)) {
+			throw new Exception("Illegal!");
+		}
+		if (accountEntity.getEnable()) {
+			throw new Exception("Verified!");
+		}
+		accountEntity.setEnable(true);
+		accountRepository.save(accountEntity);
+		return new Account(accountEntity);
+	}
+
+	@Override
+	public Account signupRe(String username) throws Exception {
+		AccountEntity accountEntity = accountRepository.findByUsername(username);
+		if (accountEntity == null) {
+			throw new Exception("Username does not exist!");
+		}
+		if (accountEntity.getEnable()) {
+			throw new Exception("Verified!");
+		}
+
+		Account account = new Account(accountEntity);
+		long expi = System.currentTimeMillis() / 60000 + signupExpiration & limit;
+		String code = TimeEncryptorUtils.encode(expi) + accountEntity.getId().substring(0, 4);
+		account.setToken(code);
+		mailService.sendSignupMail(account);
+
+		account.setToken("");
+		return account;
+	}
+
+	@Override
+	public Account newPassword(String username) throws Exception {
+		AccountEntity accountEntity = accountRepository.findByUsername(username);
+		if (accountEntity == null) {
+			throw new Exception("Username does not exist!");
+		}
+		long rand = System.currentTimeMillis() / 60000 + signupExpiration;
+		String pass = TimeEncryptorUtils.encode(rand) + accountEntity.getId().substring(0, 4);
+		accountEntity.setPassword(EncryptedPasswordUtils.encryptedPassword(pass));
+		accountRepository.save(accountEntity);
+
+		Account account = new Account(accountEntity);
+		account.setPassword(pass);
+		mailService.sendNewPasswordMail(account);
+
+		account.setPassword("");
+		return account;
+	}
 
 }

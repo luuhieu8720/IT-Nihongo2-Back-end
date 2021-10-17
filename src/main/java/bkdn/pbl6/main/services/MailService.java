@@ -7,5 +7,7 @@ public interface MailService {
 	public boolean sendHello(String email);
 	
 	public boolean sendSignupMail(Account account);
+	
+	public boolean sendNewPasswordMail(Account account);
 
 }

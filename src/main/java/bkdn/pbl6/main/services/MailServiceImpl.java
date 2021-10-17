@@ -43,12 +43,33 @@ public class MailServiceImpl implements MailService {
 	@Override
 	public boolean sendSignupMail(Account account) {
 		Context context = new Context();
-		context.setVariable("user", account);
+		context.setVariable("account", account);
 		String html = templateEngine.process("mail/signup.html", context);
 		MimeMessage mailMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mailMessage);
 		try {
-			helper.setSubject("Hello java mail sender");
+			helper.setSubject("Welcome");
+			helper.setFrom("noreply@itnihongo.com");
+			helper.setTo(account.getEmail());
+			helper.setText(html, true);
+			javaMailSender.send(mailMessage);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean sendNewPasswordMail(Account account) {
+		Context context = new Context();
+		context.setVariable("account", account);
+		String html = templateEngine.process("mail/newpassword.html", context);
+		MimeMessage mailMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mailMessage);
+		try {
+			helper.setSubject("Reset Password");
+			helper.setFrom("noreply@itnihongo.com");
 			helper.setTo(account.getEmail());
 			helper.setText(html, true);
 			javaMailSender.send(mailMessage);
