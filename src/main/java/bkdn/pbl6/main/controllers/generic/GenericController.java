@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -78,7 +79,7 @@ public class GenericController {
 		}
 	}
 
-	@PostMapping(path = "/update/password")
+	@PutMapping(path = "/update/password")
 	public ResponseEntity<ApiResponse> apiUpdatePassword(@RequestBody Password pass) {
 		AccountModel accountModel = getAccount();
 		return updatePassword(accountModel.getUsername(), pass.getOldPassword(), pass.getNewPassword());
