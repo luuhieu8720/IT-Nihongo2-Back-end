@@ -122,8 +122,9 @@ public class UserServiceImpl implements UserService {
 			dataEntity = new DataEntity();
 			dataRepository.save(dataEntity);
 			accountEntity.setIdData(dataEntity.getId());
+			accountEntity = accountRepository.save(accountEntity);
 		} else {
-			Optional<DataEntity> optional = dataRepository.findById(accountEntity.getId());
+			Optional<DataEntity> optional = dataRepository.findById(accountEntity.getIdData());
 			if (optional.isEmpty()) {
 				Exception e = new Exception("Data not found!");
 				e.printStackTrace();
@@ -145,8 +146,9 @@ public class UserServiceImpl implements UserService {
 			dataEntity = new DataEntity(data);
 			dataRepository.save(dataEntity);
 			accountEntity.setIdData(dataEntity.getId());
+			accountEntity = accountRepository.save(accountEntity);
 		} else {
-			Optional<DataEntity> optional = dataRepository.findById(accountEntity.getId());
+			Optional<DataEntity> optional = dataRepository.findById(accountEntity.getIdData());
 			if (optional.isEmpty()) {
 				Exception e = new Exception("Data not found!");
 				e.printStackTrace();
