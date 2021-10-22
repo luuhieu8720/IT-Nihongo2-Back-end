@@ -1,6 +1,7 @@
 package bkdn.pbl6.main.services;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,9 +35,9 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public ArrayList<Post> getAll() {
-		ArrayList<PostEntity> postEntyties = postRepository.findAll();
+		ArrayList<PostEntity> postEntities = postRepository.findAll();
 		ArrayList<Post> rs = new ArrayList<>();
-		for (PostEntity postEntity : postEntyties)
+		for (PostEntity postEntity : postEntities)
 			try {
 				Post post = new Post(postEntity);
 				AccountEntity accountEntity = accountRepository.findById(postEntity.getIdUser()).get();
@@ -46,6 +47,20 @@ public class PostServiceImpl implements PostService {
 				System.out.println(e.getMessage());
 			}
 		return rs;
+	}
+
+	@Override
+	public Post get(String id) throws Exception {
+		Optional<PostEntity> optional = postRepository.findById(id);
+		if (optional.isEmpty())
+			throw new Exception("Id not found!");
+		PostEntity postEntity = optional.get();
+
+		Post post = new Post(postEntity);
+		AccountEntity accountEntity = accountRepository.findById(postEntity.getIdUser()).get();
+		post.setUsername(accountEntity.getUsername());
+
+		return post;
 	}
 
 }

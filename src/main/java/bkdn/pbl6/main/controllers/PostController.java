@@ -2,12 +2,14 @@ package bkdn.pbl6.main.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bkdn.pbl6.main.configs.models.AccountModel;
@@ -39,13 +41,24 @@ public class PostController {
 		}
 	}
 
-	@RequestMapping(path = "/post/get/all", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT })
-	public ResponseEntity<ApiResponse> apiGetAllPost() {
-		return getAllPost();
+	@RequestMapping(path = "/post/get", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT })
+	public ResponseEntity<ApiResponse> apiGetAllPost(@RequestParam @Nullable String id,
+			@RequestBody @Nullable Post post) {
+		if (post != null) {
+			return getPost(post.getId());
+		}
+		return getPost(id);
 	}
 
-	public ResponseEntity<ApiResponse> getAllPost() {
-		return ResponseEntity.ok(new ApiResponse(true, postService.getAll()));
+	public ResponseEntity<ApiResponse> getPost(String id) {
+		if (id == null)
+			return ResponseEntity.ok(new ApiResponse(true, postService.getAll()));
+		else
+			try {
+				return ResponseEntity.ok(new ApiResponse(true, postService.get(id)));
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+			}
 	}
 
 	private AccountModel getAccount() {

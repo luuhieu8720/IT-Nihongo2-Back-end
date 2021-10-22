@@ -10,4 +10,6 @@ public interface PostService {
 
 	public ArrayList<Post> getAll();
 
+	public Post get(String id) throws Exception;
+
 }
