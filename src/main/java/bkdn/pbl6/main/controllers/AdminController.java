@@ -1,4 +1,4 @@
-package bkdn.pbl6.main.controllers.admin;
+package bkdn.pbl6.main.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

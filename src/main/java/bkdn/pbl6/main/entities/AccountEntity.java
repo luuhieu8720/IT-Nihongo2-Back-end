@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.models.Account;
 
 @Document(collection = "account")

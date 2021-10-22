@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.DataEntity;
-import bkdn.pbl6.main.entities.Role;
+import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.Data;
 import bkdn.pbl6.main.repositories.AccountRepository;
@@ -174,8 +174,6 @@ public class UserServiceImpl implements UserService {
 		if (accountEntity.getRole() == Role.Tutor) {
 			if (data.getDegree() != null)
 				dataEntity.setDegree(data.getDegree());
-			if (data.getOffice() != null)
-				dataEntity.setOffice(data.getOffice());
 			if (data.getSpecialty() != null)
 				dataEntity.setSpecialty(data.getSpecialty());
 			if (data.getStudentId() != null)

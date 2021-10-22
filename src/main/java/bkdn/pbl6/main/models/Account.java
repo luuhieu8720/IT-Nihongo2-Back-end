@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import bkdn.pbl6.main.configs.models.AccountModel;
 import bkdn.pbl6.main.entities.AccountEntity;
-import bkdn.pbl6.main.entities.Role;
+import bkdn.pbl6.main.enums.Role;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {

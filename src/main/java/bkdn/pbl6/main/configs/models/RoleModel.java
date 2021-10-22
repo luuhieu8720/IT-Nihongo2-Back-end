@@ -2,7 +2,7 @@ package bkdn.pbl6.main.configs.models;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import bkdn.pbl6.main.entities.Role;
+import bkdn.pbl6.main.enums.Role;
 
 public class RoleModel implements GrantedAuthority {
 

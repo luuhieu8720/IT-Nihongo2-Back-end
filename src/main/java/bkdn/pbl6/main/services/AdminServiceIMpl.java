@@ -7,7 +7,7 @@ import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.repositories.AccountRepository;
 
 @Service
-public class AdminServiceIMpl implements AdminService {
+public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private AccountRepository accountRepository;

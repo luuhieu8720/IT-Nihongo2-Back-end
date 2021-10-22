@@ -22,8 +22,6 @@ public class Data {
 
 	private String avatar;
 
-	private String office;
-
 	private String specialty;
 
 	private String degree;
@@ -34,7 +32,7 @@ public class Data {
 	}
 
 	public Data(String username, String email, String name, String telephone, String address, Boolean male,
-			String avatar, String office, String specialty, String degree, String studentId) {
+			String avatar, String specialty, String degree, String studentId) {
 		this.username = username;
 		this.email = email;
 		this.name = name;
@@ -42,7 +40,6 @@ public class Data {
 		this.address = address;
 		this.male = male;
 		this.avatar = avatar;
-		this.office = office;
 		this.specialty = specialty;
 		this.degree = degree;
 		this.studentId = studentId;
@@ -72,7 +69,6 @@ public class Data {
 		this.address = dataEntity.getAddress();
 		this.male = dataEntity.getMale();
 		this.avatar = dataEntity.getAvatar();
-		this.office = dataEntity.getOffice();
 		this.specialty = dataEntity.getSpecialty();
 		this.degree = dataEntity.getDegree();
 		this.studentId = dataEntity.getStudentId();
@@ -132,14 +128,6 @@ public class Data {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
-	}
-
-	public String getOffice() {
-		return office;
-	}
-
-	public void setOffice(String office) {
-		this.office = office;
 	}
 
 	public String getSpecialty() {

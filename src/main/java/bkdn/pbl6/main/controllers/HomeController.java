@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bkdn.pbl6.main.configs.models.AccountModel;
-import bkdn.pbl6.main.entities.Role;
+import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.jwt.JwtTokenProvider;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.ApiResponse;

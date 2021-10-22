@@ -19,8 +19,6 @@ public class DataEntity {
 
 	private String avatar;
 
-	private String office;
-
 	private String specialty;
 
 	private String degree;
@@ -30,14 +28,13 @@ public class DataEntity {
 	public DataEntity() {
 	}
 
-	public DataEntity(String id, String telephone, String address, Boolean male, String avatar, String office,
-			String specialty, String degree, String studentId) {
+	public DataEntity(String id, String telephone, String address, Boolean male, String avatar, String specialty,
+			String degree, String studentId) {
 		this.id = id;
 		this.telephone = telephone;
 		this.address = address;
 		this.male = male;
 		this.avatar = avatar;
-		this.office = office;
 		this.specialty = specialty;
 		this.degree = degree;
 		this.studentId = studentId;
@@ -48,7 +45,6 @@ public class DataEntity {
 		this.address = data.getAddress();
 		this.male = data.getMale();
 		this.avatar = data.getAvatar();
-		this.office = data.getOffice();
 		this.specialty = data.getSpecialty();
 		this.degree = data.getDegree();
 		this.studentId = data.getStudentId();
@@ -92,14 +88,6 @@ public class DataEntity {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
-	}
-
-	public String getOffice() {
-		return office;
-	}
-
-	public void setOffice(String office) {
-		this.office = office;
 	}
 
 	public String getSpecialty() {
