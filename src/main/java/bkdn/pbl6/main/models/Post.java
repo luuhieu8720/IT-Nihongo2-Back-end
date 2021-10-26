@@ -18,13 +18,17 @@ public class Post {
 
 	private String details;
 
-	private String salary;
+	private Integer salary;
 
 	private String course;
 
 	private ArrayList<Timetable> time;
 
-	private String location;
+	private String city;
+
+	private String district;
+
+	private String ward;
 
 	private Boolean invalid;
 
@@ -33,8 +37,9 @@ public class Post {
 	public Post() {
 	}
 
-	public Post(String id, String username, String title, String details, String salary, String course,
-			ArrayList<Timetable> time, String location, Boolean invalid, Gender gender) {
+	public Post(String id, String username, String title, String details, Integer salary, String course,
+			ArrayList<Timetable> time, String city, String district, String ward, Boolean invalid, Gender gender) {
+		super();
 		this.id = id;
 		this.username = username;
 		this.title = title;
@@ -42,7 +47,9 @@ public class Post {
 		this.salary = salary;
 		this.course = course;
 		this.time = time;
-		this.location = location;
+		this.city = city;
+		this.district = district;
+		this.ward = ward;
 		this.invalid = invalid;
 		this.gender = gender;
 	}
@@ -54,7 +61,9 @@ public class Post {
 		this.salary = postEntity.getSalary();
 		this.course = postEntity.getCourse();
 		this.time = postEntity.getTime();
-		this.location = postEntity.getLocation();
+		this.city = postEntity.getCity();
+		this.district = postEntity.getDistrict();
+		this.ward = postEntity.getWard();
 		this.invalid = postEntity.getInvalid();
 		this.gender = postEntity.getGender();
 	}
@@ -91,11 +100,11 @@ public class Post {
 		this.details = details;
 	}
 
-	public String getSalary() {
+	public Integer getSalary() {
 		return salary;
 	}
 
-	public void setSalary(String salary) {
+	public void setSalary(Integer salary) {
 		this.salary = salary;
 	}
 
@@ -115,12 +124,28 @@ public class Post {
 		this.time = time;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getCity() {
+		return city;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public String getWard() {
+		return ward;
+	}
+
+	public void setWard(String ward) {
+		this.ward = ward;
 	}
 
 	public Boolean getInvalid() {

@@ -41,7 +41,7 @@ public class PostController {
 		}
 	}
 
-	@RequestMapping(path = "/post/get", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT })
+	@RequestMapping(path = "/post/get", method = { RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<ApiResponse> apiGetAllPost(@RequestParam @Nullable String id,
 			@RequestBody @Nullable Post post) {
 		if (post != null) {
@@ -50,7 +50,7 @@ public class PostController {
 		return getPost(id);
 	}
 
-	public ResponseEntity<ApiResponse> getPost(String id) {
+	private ResponseEntity<ApiResponse> getPost(String id) {
 		if (id == null)
 			return ResponseEntity.ok(new ApiResponse(true, postService.getAll()));
 		else
@@ -59,6 +59,21 @@ public class PostController {
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
 			}
+	}
+	
+	@RequestMapping(path = "/post/find", method = {RequestMethod.GET, RequestMethod.POST})
+	public ResponseEntity<ApiResponse> apiFindPost(@RequestBody Post post ) {
+		return findPost(post);
+	}
+	
+	private ResponseEntity<ApiResponse> findPost(Post post ) {
+		if (post==null)
+			return ResponseEntity.badRequest().body(new ApiResponse(false, "Use get if you want get all!"));
+		try {
+			return ResponseEntity.ok(new ApiResponse(true, postService.find(post)));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+		}
 	}
 
 	private AccountModel getAccount() {

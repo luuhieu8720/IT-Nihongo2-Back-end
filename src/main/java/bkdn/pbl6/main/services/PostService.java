@@ -12,4 +12,6 @@ public interface PostService {
 
 	public Post get(String id) throws Exception;
 
+	public ArrayList<Post> find(Post post) throws Exception;
+
 }

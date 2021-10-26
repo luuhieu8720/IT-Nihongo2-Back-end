@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
 import bkdn.pbl6.main.entities.AccountEntity;
@@ -61,6 +65,34 @@ public class PostServiceImpl implements PostService {
 		post.setUsername(accountEntity.getUsername());
 
 		return post;
+	}
+
+	@Override
+	public ArrayList<Post> find(Post post) throws Exception {
+
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("city", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+				.withMatcher("dictrict", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+				.withMatcher("ward", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+				.withMatcher("course", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false));
+
+		Example<PostEntity> example = Example.of(new PostEntity(post), exampleMatcher);
+
+		ArrayList<PostEntity> postEntities = new ArrayList<>(postRepository.findAll(example));
+
+		ArrayList<Post> rs = new ArrayList<>();
+		for (PostEntity postEntity : postEntities)
+			try {
+				Post p = new Post(postEntity);
+				AccountEntity accountEntity = accountRepository.findById(postEntity.getIdUser()).get();
+				p.setUsername(accountEntity.getUsername());
+				rs.add(p);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+
+		return rs;
 	}
 
 }
