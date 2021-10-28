@@ -1,13 +1,10 @@
 package bkdn.pbl6.main.entities;
 
-import java.util.ArrayList;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import bkdn.pbl6.main.enums.Gender;
 import bkdn.pbl6.main.models.Post;
-import bkdn.pbl6.main.models.Timetable;
 
 @Document(collection = "post")
 public class PostEntity {
@@ -25,7 +22,9 @@ public class PostEntity {
 
 	private String course;
 
-	private ArrayList<Timetable> time;
+	private String time;
+
+	private String day;
 
 	private String city;
 
@@ -41,7 +40,7 @@ public class PostEntity {
 	}
 
 	public PostEntity(String id, String idUser, String title, String details, Integer salary, String course,
-			ArrayList<Timetable> time, String city, String district, String ward, Boolean invalid, Gender gender) {
+			String time, String day, String city, String district, String ward, Boolean invalid, Gender gender) {
 		this.id = id;
 		this.idUser = idUser;
 		this.title = title;
@@ -49,6 +48,7 @@ public class PostEntity {
 		this.salary = salary;
 		this.course = course;
 		this.time = time;
+		this.day = day;
 		this.city = city;
 		this.district = district;
 		this.ward = ward;
@@ -62,9 +62,10 @@ public class PostEntity {
 		this.salary = post.getSalary();
 		this.course = post.getCourse();
 		this.time = post.getTime();
-		this.time = post.getTime();
+		this.day = post.getDay();
 		this.city = post.getCity();
 		this.district = post.getDistrict();
+		this.ward = post.getWard();
 		this.invalid = post.getInvalid();
 		this.gender = post.getGender();
 	}
@@ -117,12 +118,20 @@ public class PostEntity {
 		this.course = course;
 	}
 
-	public ArrayList<Timetable> getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(ArrayList<Timetable> time) {
+	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
 	}
 
 	public String getCity() {

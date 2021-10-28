@@ -72,7 +72,7 @@ public class PostServiceImpl implements PostService {
 	public ArrayList<Post> find(Post post) throws Exception {
 
 		PostEntity postEntity = new PostEntity(post);
-		
+
 //		if (!StringUtils.hasText(post.getCity()))
 //			post.setCity(null);
 //		if (!StringUtils.hasText(post.getCourse()))
@@ -92,15 +92,14 @@ public class PostServiceImpl implements PostService {
 //		post.setSalary(null);
 //		post.setTime(null);
 
-		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
-				.withIgnoreCase(true)
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
 				.withStringMatcher(StringMatcher.CONTAINING)
 //				.withMatcher("city", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("dictrict", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("ward", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("course", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false))
-				.withIgnorePaths("id", "time", "salary", "title", "detail", "idUser");
+				.withIgnorePaths("id", "time", "day", "salary", "title", "detail", "idUser");
 
 		Example<PostEntity> example = Example.of(postEntity, exampleMatcher);
 

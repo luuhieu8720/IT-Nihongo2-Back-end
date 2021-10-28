@@ -1,7 +1,5 @@
 package bkdn.pbl6.main.models;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import bkdn.pbl6.main.entities.PostEntity;
@@ -22,7 +20,9 @@ public class Post {
 
 	private String course;
 
-	private ArrayList<Timetable> time;
+	private String time;
+
+	private String day;
 
 	private String city;
 
@@ -37,8 +37,8 @@ public class Post {
 	public Post() {
 	}
 
-	public Post(String id, String username, String title, String details, Integer salary, String course,
-			ArrayList<Timetable> time, String city, String district, String ward, Boolean invalid, Gender gender) {
+	public Post(String id, String username, String title, String details, Integer salary, String course, String time,
+			String day, String city, String district, String ward, Boolean invalid, Gender gender) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -47,6 +47,7 @@ public class Post {
 		this.salary = salary;
 		this.course = course;
 		this.time = time;
+		this.day = day;
 		this.city = city;
 		this.district = district;
 		this.ward = ward;
@@ -61,6 +62,7 @@ public class Post {
 		this.salary = postEntity.getSalary();
 		this.course = postEntity.getCourse();
 		this.time = postEntity.getTime();
+		this.day = postEntity.getDay();
 		this.city = postEntity.getCity();
 		this.district = postEntity.getDistrict();
 		this.ward = postEntity.getWard();
@@ -116,12 +118,20 @@ public class Post {
 		this.course = course;
 	}
 
-	public ArrayList<Timetable> getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(ArrayList<Timetable> time) {
+	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
 	}
 
 	public String getCity() {
