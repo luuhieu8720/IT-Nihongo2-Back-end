@@ -1,5 +1,7 @@
 package bkdn.pbl6.main.services;
 
+import java.util.ArrayList;
+
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.Data;
 
@@ -18,5 +20,9 @@ public interface UserService {
 	public Data update(Data data) throws Exception;
 
 	public Boolean updatePassword(String username, String oldPass, String newPass) throws Exception;
+
+	public ArrayList<Data> getAll(Data data) throws Exception;
+
+	public ArrayList<Data> find(Data data) throws Exception;
 
 }

@@ -1,12 +1,18 @@
 package bkdn.pbl6.main.services;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.DataEntity;
+import bkdn.pbl6.main.enums.Gender;
 import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.Data;
@@ -120,6 +126,7 @@ public class UserServiceImpl implements UserService {
 		DataEntity dataEntity;
 		if (accountEntity.getIdData() == null) {
 			dataEntity = new DataEntity();
+			dataEntity.setIdAccount(accountEntity.getId());
 			dataRepository.save(dataEntity);
 			accountEntity.setIdData(dataEntity.getId());
 			accountEntity = accountRepository.save(accountEntity);
@@ -144,6 +151,7 @@ public class UserServiceImpl implements UserService {
 		DataEntity dataEntity;
 		if (accountEntity.getIdData() == null) {
 			dataEntity = new DataEntity(data);
+			dataEntity.setIdAccount(accountEntity.getId());
 			dataRepository.save(dataEntity);
 			accountEntity.setIdData(dataEntity.getId());
 			accountEntity = accountRepository.save(accountEntity);
@@ -162,8 +170,8 @@ public class UserServiceImpl implements UserService {
 			accountEntity = accountRepository.save(accountEntity);
 		}
 
-		if (data.getMale() != null)
-			dataEntity.setMale(data.getMale());
+		if (data.getGender() != null)
+			dataEntity.setGender(data.getGender());
 		if (data.getAddress() != null)
 			dataEntity.setAddress(data.getAddress());
 		if (data.getAvatar() != null)
@@ -199,6 +207,79 @@ public class UserServiceImpl implements UserService {
 		accountRepository.save(accountEntity);
 
 		return true;
+	}
+
+	@Override
+	public ArrayList<Data> getAll(Data data) throws Exception {
+
+		ArrayList<AccountEntity> accountEntities = accountRepository.findByRole(data.getRole());
+
+		ArrayList<Data> datas = new ArrayList<>();
+		for (AccountEntity accountEntity : accountEntities) {
+			DataEntity dataEntity;
+			if (accountEntity.getIdData() == null) {
+
+				dataEntity = new DataEntity(data);
+				dataEntity.setIdAccount(accountEntity.getId());
+				dataRepository.save(dataEntity);
+
+				accountEntity.setIdData(dataEntity.getId());
+				accountEntity = accountRepository.save(accountEntity);
+
+			} else {
+				Optional<DataEntity> optional = dataRepository.findById(accountEntity.getIdData());
+
+				if (optional.isEmpty()) {
+					System.out.print("Data not found:" + accountEntity.getUsername());
+					continue;
+				}
+
+				dataEntity = optional.get();
+			}
+			datas.add(new Data(accountEntity, dataEntity));
+		}
+
+		return datas;
+	}
+
+	@Override
+	public ArrayList<Data> find(Data data) throws Exception {
+
+		DataEntity dataEntity = new DataEntity(data);
+
+		dataEntity.setAddress(null);
+		dataEntity.setAvatar(null);
+		dataEntity.setDegree(null);
+		if (dataEntity.getGender() == Gender.None)
+			dataEntity.setGender(null);
+		dataEntity.setId(null);
+		dataEntity.setIdAccount(null);
+		if (!StringUtils.hasText(dataEntity.getSpecialty()))
+			dataEntity.setSpecialty(null);
+		dataEntity.setStudentId(null);
+		dataEntity.setTelephone(null);
+
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
+				.withStringMatcher(StringMatcher.CONTAINING);
+//				.withMatcher("specialty", GenericPropertyMatcher.of(StringMatcher.CONTAINING, false))
+//				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false));
+
+		Example<DataEntity> example = Example.of(dataEntity, exampleMatcher);
+
+		ArrayList<DataEntity> dataEntities = new ArrayList<>(dataRepository.findAll(example));
+
+		ArrayList<Data> datas = new ArrayList<>();
+		for (DataEntity d : dataEntities) {
+			try {
+				AccountEntity accountEntity = accountRepository.findById(d.getIdAccount()).get();
+				datas.add(new Data(accountEntity, d));
+			} catch (Exception e) {
+				System.out.println("Account not found: " + d.getIdAccount());
+				System.out.println(e.getMessage());
+			}
+		}
+
+		return datas;
 	}
 
 }

@@ -3,6 +3,7 @@ package bkdn.pbl6.main.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import bkdn.pbl6.main.enums.Gender;
 import bkdn.pbl6.main.models.Data;
 
 @Document(collection = "data")
@@ -15,7 +16,7 @@ public class DataEntity {
 
 	private String address;
 
-	private Boolean male;
+	private Gender gender;
 
 	private String avatar;
 
@@ -25,25 +26,28 @@ public class DataEntity {
 
 	private String studentId;
 
+	private String idAccount;
+
 	public DataEntity() {
 	}
 
-	public DataEntity(String id, String telephone, String address, Boolean male, String avatar, String specialty,
-			String degree, String studentId) {
+	public DataEntity(String id, String telephone, String address, Gender gender, String avatar, String specialty,
+			String degree, String studentId, String idAccount) {
 		this.id = id;
 		this.telephone = telephone;
 		this.address = address;
-		this.male = male;
+		this.gender = gender;
 		this.avatar = avatar;
 		this.specialty = specialty;
 		this.degree = degree;
 		this.studentId = studentId;
+		this.idAccount = idAccount;
 	}
 
 	public DataEntity(Data data) {
 		this.telephone = data.getTelephone();
 		this.address = data.getAddress();
-		this.male = data.getMale();
+		this.gender = data.getGender();
 		this.avatar = data.getAvatar();
 		this.specialty = data.getSpecialty();
 		this.degree = data.getDegree();
@@ -74,12 +78,12 @@ public class DataEntity {
 		this.address = address;
 	}
 
-	public Boolean getMale() {
-		return male;
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setMale(Boolean male) {
-		this.male = male;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public String getAvatar() {
@@ -112,6 +116,14 @@ public class DataEntity {
 
 	public void setStudentId(String studentId) {
 		this.studentId = studentId;
+	}
+
+	public String getIdAccount() {
+		return idAccount;
+	}
+
+	public void setIdAccount(String idAccount) {
+		this.idAccount = idAccount;
 	}
 
 }

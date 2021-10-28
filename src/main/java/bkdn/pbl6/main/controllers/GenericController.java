@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bkdn.pbl6.main.configs.models.AccountModel;
+import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.ApiResponse;
 import bkdn.pbl6.main.models.Data;
@@ -92,6 +93,37 @@ public class GenericController {
 		try {
 			userService.updatePassword(username, oldPass, newPass);
 			return ResponseEntity.ok(new ApiResponse(true));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+		}
+	}
+
+	@RequestMapping(path = "/tutor/get", method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<ApiResponse> apiGetAllTutor() {
+		Data data = new Data();
+		data.setRole(Role.Tutor);
+		return getTutor(data);
+	}
+
+	private ResponseEntity<ApiResponse> getTutor(Data data) {
+		try {
+			return ResponseEntity.ok(new ApiResponse(true, userService.getAll(data)));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+		}
+	}
+
+	@RequestMapping(path = "/tutor/find", method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<ApiResponse> apiFindTutor(@RequestBody Data data) {
+		data.setRole(Role.Tutor);
+		return find(data);
+	}
+
+	private ResponseEntity<ApiResponse> find(Data data) {
+		if (data == null)
+			return ResponseEntity.badRequest().body(new ApiResponse(false, "Use get if you want get all!"));
+		try {
+			return ResponseEntity.ok(new ApiResponse(true, userService.find(data)));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
 		}

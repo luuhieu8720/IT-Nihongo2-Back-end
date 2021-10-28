@@ -41,7 +41,7 @@ public class PostController {
 		}
 	}
 
-	@RequestMapping(path = "/post/get", method = { RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(path = "/post/get", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<ApiResponse> apiGetAllPost(@RequestParam @Nullable String id,
 			@RequestBody @Nullable Post post) {
 		if (post != null) {
@@ -60,14 +60,14 @@ public class PostController {
 				return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
 			}
 	}
-	
-	@RequestMapping(path = "/post/find", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<ApiResponse> apiFindPost(@RequestBody Post post ) {
+
+	@RequestMapping(path = "/post/find", method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<ApiResponse> apiFindPost(@RequestBody Post post) {
 		return findPost(post);
 	}
-	
-	private ResponseEntity<ApiResponse> findPost(Post post ) {
-		if (post==null)
+
+	private ResponseEntity<ApiResponse> findPost(Post post) {
+		if (post == null)
 			return ResponseEntity.badRequest().body(new ApiResponse(false, "Use get if you want get all!"));
 		try {
 			return ResponseEntity.ok(new ApiResponse(true, postService.find(post)));

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.DataEntity;
+import bkdn.pbl6.main.enums.Gender;
+import bkdn.pbl6.main.enums.Role;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Data {
@@ -18,7 +20,7 @@ public class Data {
 
 	private String address;
 
-	private Boolean male;
+	private Gender gender;
 
 	private String avatar;
 
@@ -28,21 +30,24 @@ public class Data {
 
 	private String studentId;
 
+	private Role role;
+
 	public Data() {
 	}
 
-	public Data(String username, String email, String name, String telephone, String address, Boolean male,
-			String avatar, String specialty, String degree, String studentId) {
+	public Data(String username, String email, String name, String telephone, String address, Gender gender,
+			String avatar, String specialty, String degree, String studentId, Role role) {
 		this.username = username;
 		this.email = email;
 		this.name = name;
 		this.telephone = telephone;
 		this.address = address;
-		this.male = male;
+		this.gender = gender;
 		this.avatar = avatar;
 		this.specialty = specialty;
 		this.degree = degree;
 		this.studentId = studentId;
+		this.role = role;
 	}
 
 	public Data(AccountEntity accountEntity, DataEntity dataEntity) {
@@ -62,12 +67,13 @@ public class Data {
 		this.username = accountEntity.getUsername();
 		this.email = accountEntity.getEmail();
 		this.name = accountEntity.getName();
+		this.role = accountEntity.getRole();
 	}
 
 	public void insertData(DataEntity dataEntity) {
 		this.telephone = dataEntity.getTelephone();
 		this.address = dataEntity.getAddress();
-		this.male = dataEntity.getMale();
+		this.gender = dataEntity.getGender();
 		this.avatar = dataEntity.getAvatar();
 		this.specialty = dataEntity.getSpecialty();
 		this.degree = dataEntity.getDegree();
@@ -114,12 +120,12 @@ public class Data {
 		this.address = address;
 	}
 
-	public Boolean getMale() {
-		return male;
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setMale(Boolean male) {
-		this.male = male;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public String getAvatar() {
@@ -152,6 +158,14 @@ public class Data {
 
 	public void setStudentId(String studentId) {
 		this.studentId = studentId;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 }

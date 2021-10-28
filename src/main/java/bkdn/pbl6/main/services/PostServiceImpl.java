@@ -6,12 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.PostEntity;
+import bkdn.pbl6.main.enums.Gender;
 import bkdn.pbl6.main.models.Post;
 import bkdn.pbl6.main.repositories.AccountRepository;
 import bkdn.pbl6.main.repositories.PostRepository;
@@ -70,12 +71,32 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ArrayList<Post> find(Post post) throws Exception {
 
-		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
-				.withMatcher("city", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
-				.withMatcher("dictrict", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
-				.withMatcher("ward", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
-				.withMatcher("course", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
-				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false));
+		if (!StringUtils.hasText(post.getCity()))
+			post.setCity(null);
+		if (!StringUtils.hasText(post.getCourse()))
+			post.setCourse(null);
+		// if (!StringUtils.hasText(post.getDetails()))
+		post.setDetails(null);
+		if (!StringUtils.hasText(post.getDistrict()))
+			post.setDistrict(null);
+		// if (!StringUtils.hasText(post.getTitle()))
+		post.setTitle(null);
+		if (!StringUtils.hasText(post.getWard()))
+			post.setWard(null);
+		if (post.getGender() == Gender.None)
+			post.setGender(null);
+		post.setId(null);
+		// if (post.getSalary() != null && post.getSalary() <= 0)
+		post.setSalary(null);
+		post.setTime(null);
+
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
+				.withStringMatcher(StringMatcher.CONTAINING);
+//				.withMatcher("city", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+//				.withMatcher("dictrict", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+//				.withMatcher("ward", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+//				.withMatcher("course", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
+//				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false));
 
 		Example<PostEntity> example = Example.of(new PostEntity(post), exampleMatcher);
 
