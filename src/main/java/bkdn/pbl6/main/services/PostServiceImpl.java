@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.PostEntity;
@@ -71,42 +71,46 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ArrayList<Post> find(Post post) throws Exception {
 
-		if (!StringUtils.hasText(post.getCity()))
-			post.setCity(null);
-		if (!StringUtils.hasText(post.getCourse()))
-			post.setCourse(null);
-		// if (!StringUtils.hasText(post.getDetails()))
-		post.setDetails(null);
-		if (!StringUtils.hasText(post.getDistrict()))
-			post.setDistrict(null);
-		// if (!StringUtils.hasText(post.getTitle()))
-		post.setTitle(null);
-		if (!StringUtils.hasText(post.getWard()))
-			post.setWard(null);
-		if (post.getGender() == Gender.None)
-			post.setGender(null);
-		post.setId(null);
-		// if (post.getSalary() != null && post.getSalary() <= 0)
-		post.setSalary(null);
-		post.setTime(null);
+		PostEntity postEntity = new PostEntity(post);
+		
+//		if (!StringUtils.hasText(post.getCity()))
+//			post.setCity(null);
+//		if (!StringUtils.hasText(post.getCourse()))
+//			post.setCourse(null);
+//		// if (!StringUtils.hasText(post.getDetails()))
+//		post.setDetails(null);
+//		if (!StringUtils.hasText(post.getDistrict()))
+//			post.setDistrict(null);
+//		// if (!StringUtils.hasText(post.getTitle()))
+//		post.setTitle(null);
+//		if (!StringUtils.hasText(post.getWard()))
+//			post.setWard(null);
+		if (postEntity.getGender() == Gender.None)
+			postEntity.setGender(null);
+//		post.setId(null);
+//		// if (post.getSalary() != null && post.getSalary() <= 0)
+//		post.setSalary(null);
+//		post.setTime(null);
 
-		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
-				.withStringMatcher(StringMatcher.CONTAINING);
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
+				.withIgnoreCase(true)
+				.withStringMatcher(StringMatcher.CONTAINING)
 //				.withMatcher("city", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("dictrict", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("ward", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("course", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
-//				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false));
+				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false))
+				.withIgnorePaths("id", "time", "salary", "title", "detail", "idUser");
 
-		Example<PostEntity> example = Example.of(new PostEntity(post), exampleMatcher);
+		Example<PostEntity> example = Example.of(postEntity, exampleMatcher);
 
 		ArrayList<PostEntity> postEntities = new ArrayList<>(postRepository.findAll(example));
 
 		ArrayList<Post> rs = new ArrayList<>();
-		for (PostEntity postEntity : postEntities)
+		for (PostEntity pE : postEntities)
 			try {
-				Post p = new Post(postEntity);
-				AccountEntity accountEntity = accountRepository.findById(postEntity.getIdUser()).get();
+				Post p = new Post(pE);
+				AccountEntity accountEntity = accountRepository.findById(pE.getIdUser()).get();
 				p.setUsername(accountEntity.getUsername());
 				rs.add(p);
 			} catch (Exception e) {

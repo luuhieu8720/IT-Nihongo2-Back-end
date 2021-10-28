@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.DataEntity;
-import bkdn.pbl6.main.enums.Gender;
 import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.Data;
@@ -245,41 +241,38 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ArrayList<Data> find(Data data) throws Exception {
 
-		DataEntity dataEntity = new DataEntity(data);
+//		DataEntity dataEntity = new DataEntity(data);
+//
+////		dataEntity.setAddress(null);
+////		dataEntity.setAvatar(null);
+////		dataEntity.setDegree(null);
+//		if (dataEntity.getGender() == Gender.None)
+//			dataEntity.setGender(null);
+////		dataEntity.setId(null);
+////		dataEntity.setIdAccount(null);
+////		if (!StringUtils.hasText(dataEntity.getSpecialty()))
+////			dataEntity.setSpecialty(null);
+////		dataEntity.setStudentId(null);
+////		dataEntity.setTelephone(null);
+//
+//		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
+//				.withStringMatcher(StringMatcher.CONTAINING)
+////				.withMatcher("specialty", GenericPropertyMatcher.of(StringMatcher.CONTAINING, false))
+//				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false))
+//				.withIgnorePaths("address", "avatar", "degree", "id", "idAccount", "studentId", "telephone");
+//
+//		Example<DataEntity> example = Example.of(dataEntity, exampleMatcher);
+//
+//		ArrayList<DataEntity> dataEntities = new ArrayList<>(dataRepository.findAll(example));
 
-		dataEntity.setAddress(null);
-		dataEntity.setAvatar(null);
-		dataEntity.setDegree(null);
-		if (dataEntity.getGender() == Gender.None)
-			dataEntity.setGender(null);
-		dataEntity.setId(null);
-		dataEntity.setIdAccount(null);
-		if (!StringUtils.hasText(dataEntity.getSpecialty()))
-			dataEntity.setSpecialty(null);
-		dataEntity.setStudentId(null);
-		dataEntity.setTelephone(null);
+		ArrayList<Data> allDatas = getAll(data);
+		ArrayList<Data> rsDatas = new ArrayList<>();
+		for (Data d : allDatas)
+			if (!StringUtils.hasText(data.getSpecialty())
+					|| (StringUtils.hasText(d.getSpecialty()) && d.getSpecialty().indexOf(data.getSpecialty()) > -1))
+				rsDatas.add(d);
 
-		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
-				.withStringMatcher(StringMatcher.CONTAINING);
-//				.withMatcher("specialty", GenericPropertyMatcher.of(StringMatcher.CONTAINING, false))
-//				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false));
-
-		Example<DataEntity> example = Example.of(dataEntity, exampleMatcher);
-
-		ArrayList<DataEntity> dataEntities = new ArrayList<>(dataRepository.findAll(example));
-
-		ArrayList<Data> datas = new ArrayList<>();
-		for (DataEntity d : dataEntities) {
-			try {
-				AccountEntity accountEntity = accountRepository.findById(d.getIdAccount()).get();
-				datas.add(new Data(accountEntity, d));
-			} catch (Exception e) {
-				System.out.println("Account not found: " + d.getIdAccount());
-				System.out.println(e.getMessage());
-			}
-		}
-
-		return datas;
+		return rsDatas;
 	}
 
 }
