@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.DataEntity;
+import bkdn.pbl6.main.enums.Gender;
 import bkdn.pbl6.main.enums.Role;
 import bkdn.pbl6.main.models.Account;
 import bkdn.pbl6.main.models.Data;
@@ -266,12 +267,21 @@ public class UserServiceImpl implements UserService {
 //		ArrayList<DataEntity> dataEntities = new ArrayList<>(dataRepository.findAll(example));
 
 		ArrayList<Data> allDatas = getAll(data);
+
 		ArrayList<Data> rsDatas = new ArrayList<>();
-		for (Data d : allDatas)
-			if (!StringUtils.hasText(data.getSpecialty())
-					|| (StringUtils.hasText(d.getSpecialty())
-					&& d.getSpecialty().toLowerCase().indexOf(data.getSpecialty().toLowerCase()) > -1))
-				rsDatas.add(d);
+		for (Data d : allDatas) {
+
+			if (StringUtils.hasText(data.getSpecialty()))
+				if (!StringUtils.hasText(d.getSpecialty())
+						|| !d.getSpecialty().toLowerCase().contains(data.getSpecialty().toLowerCase()))
+					continue;
+
+			if (data.getGender() != null && data.getGender() != Gender.None)
+				if (d.getGender() == null || data.getGender() != d.getGender())
+					continue;
+
+			rsDatas.add(d);
+		}
 
 		return rsDatas;
 	}

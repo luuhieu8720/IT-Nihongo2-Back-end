@@ -9,6 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import bkdn.pbl6.main.entities.AccountEntity;
 import bkdn.pbl6.main.entities.PostEntity;
@@ -73,24 +74,30 @@ public class PostServiceImpl implements PostService {
 
 		PostEntity postEntity = new PostEntity(post);
 
-//		if (!StringUtils.hasText(post.getCity()))
-//			post.setCity(null);
-//		if (!StringUtils.hasText(post.getCourse()))
-//			post.setCourse(null);
-//		// if (!StringUtils.hasText(post.getDetails()))
-//		post.setDetails(null);
-//		if (!StringUtils.hasText(post.getDistrict()))
-//			post.setDistrict(null);
-//		// if (!StringUtils.hasText(post.getTitle()))
-//		post.setTitle(null);
-//		if (!StringUtils.hasText(post.getWard()))
-//			post.setWard(null);
+		if (!StringUtils.hasText(postEntity.getCourse()))
+			postEntity.setCourse(null);
+
+		if (!StringUtils.hasText(postEntity.getCity()))
+			postEntity.setCity(null);
+		if (!StringUtils.hasText(postEntity.getDistrict()))
+			postEntity.setDistrict(null);
+		if (!StringUtils.hasText(postEntity.getWard()))
+			postEntity.setWard(null);
+
 		if (postEntity.getGender() == Gender.None)
 			postEntity.setGender(null);
-//		post.setId(null);
-//		// if (post.getSalary() != null && post.getSalary() <= 0)
-//		post.setSalary(null);
-//		post.setTime(null);
+
+//		if (!StringUtils.hasText(postEntity.getDetails()))
+//			postEntity.setDetails(null);
+//		if (!StringUtils.hasText(postEntity.getTitle()))
+//			postEntity.setTitle(null);
+//		if (postEntity.getSalary() != null && postEntity.getSalary() <= 0)
+//			postEntity.setSalary(null);
+//		postEntity.setTime(null);
+//		postEntity.setDay(null);
+//
+//		postEntity.setId(null);
+//		postEntity.setIdUser(null);
 
 		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase(true)
 				.withStringMatcher(StringMatcher.CONTAINING)
@@ -99,7 +106,7 @@ public class PostServiceImpl implements PostService {
 //				.withMatcher("ward", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 //				.withMatcher("course", GenericPropertyMatcher.of(StringMatcher.CONTAINING, true))
 				.withMatcher("gender", GenericPropertyMatcher.of(StringMatcher.EXACT, false))
-				.withIgnorePaths("id", "time", "day", "salary", "title", "detail", "idUser");
+				.withIgnorePaths("id", "idUser", "time", "day", "salary", "title", "detail");
 
 		Example<PostEntity> example = Example.of(postEntity, exampleMatcher);
 
