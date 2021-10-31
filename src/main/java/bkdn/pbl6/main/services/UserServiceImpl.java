@@ -269,7 +269,8 @@ public class UserServiceImpl implements UserService {
 		ArrayList<Data> rsDatas = new ArrayList<>();
 		for (Data d : allDatas)
 			if (!StringUtils.hasText(data.getSpecialty())
-					|| (StringUtils.hasText(d.getSpecialty()) && d.getSpecialty().indexOf(data.getSpecialty()) > -1))
+					|| (StringUtils.hasText(d.getSpecialty())
+					&& d.getSpecialty().toLowerCase().indexOf(data.getSpecialty().toLowerCase()) > -1))
 				rsDatas.add(d);
 
 		return rsDatas;
