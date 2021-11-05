@@ -27,7 +27,7 @@ import bkdn.pbl6.main.services.UserService;
 @RequestMapping(path = "/api/noauth")
 public class HomeController {
 
-	private String errorBlank = "%1$s must not be blank!";
+	private static final String errorBlank = "%1$s must not be blank!";
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
