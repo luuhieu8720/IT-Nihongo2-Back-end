@@ -26,13 +26,23 @@ public class DataEntity {
 
 	private String studentId;
 
+	private Integer age;
+
+	private String dateOfBirth;
+
+	private String experience;
+
+	private String currentJob;
+
 	private String idAccount;
 
 	public DataEntity() {
 	}
 
 	public DataEntity(String id, String telephone, String address, Gender gender, String avatar, String specialty,
-			String degree, String studentId, String idAccount) {
+			String degree, String studentId, Integer age, String dateOfBirth, String experience, String currentJob,
+			String idAccount) {
+		super();
 		this.id = id;
 		this.telephone = telephone;
 		this.address = address;
@@ -41,6 +51,10 @@ public class DataEntity {
 		this.specialty = specialty;
 		this.degree = degree;
 		this.studentId = studentId;
+		this.age = age;
+		this.dateOfBirth = dateOfBirth;
+		this.experience = experience;
+		this.currentJob = currentJob;
 		this.idAccount = idAccount;
 	}
 
@@ -52,6 +66,10 @@ public class DataEntity {
 		this.specialty = data.getSpecialty();
 		this.degree = data.getDegree();
 		this.studentId = data.getStudentId();
+		this.age = data.getAge();
+		this.dateOfBirth = data.getDateOfBirth();
+		this.experience = data.getExperience();
+		this.currentJob = data.getCurrentJob();
 	}
 
 	public String getId() {
@@ -116,6 +134,38 @@ public class DataEntity {
 
 	public void setStudentId(String studentId) {
 		this.studentId = studentId;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getExperience() {
+		return experience;
+	}
+
+	public void setExperience(String experience) {
+		this.experience = experience;
+	}
+
+	public String getCurrentJob() {
+		return currentJob;
+	}
+
+	public void setCurrentJob(String currentJob) {
+		this.currentJob = currentJob;
 	}
 
 	public String getIdAccount() {

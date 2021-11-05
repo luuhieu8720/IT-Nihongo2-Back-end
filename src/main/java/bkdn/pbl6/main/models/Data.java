@@ -30,13 +30,23 @@ public class Data {
 
 	private String studentId;
 
+	private Integer age;
+
+	private String dateOfBirth;
+
+	private String experience;
+
+	private String currentJob;
+
 	private Role role;
 
 	public Data() {
 	}
 
 	public Data(String username, String email, String name, String telephone, String address, Gender gender,
-			String avatar, String specialty, String degree, String studentId, Role role) {
+			String avatar, String specialty, String degree, String studentId, Integer age, String dateOfBirth,
+			String experience, String currentJob, Role role) {
+		super();
 		this.username = username;
 		this.email = email;
 		this.name = name;
@@ -47,6 +57,10 @@ public class Data {
 		this.specialty = specialty;
 		this.degree = degree;
 		this.studentId = studentId;
+		this.age = age;
+		this.dateOfBirth = dateOfBirth;
+		this.experience = experience;
+		this.currentJob = currentJob;
 		this.role = role;
 	}
 
@@ -78,6 +92,10 @@ public class Data {
 		this.specialty = dataEntity.getSpecialty();
 		this.degree = dataEntity.getDegree();
 		this.studentId = dataEntity.getStudentId();
+		this.age = dataEntity.getAge();
+		this.dateOfBirth = dataEntity.getDateOfBirth();
+		this.experience = dataEntity.getExperience();
+		this.currentJob = dataEntity.getCurrentJob();
 	}
 
 	public String getUsername() {
@@ -158,6 +176,38 @@ public class Data {
 
 	public void setStudentId(String studentId) {
 		this.studentId = studentId;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getExperience() {
+		return experience;
+	}
+
+	public void setExperience(String experience) {
+		this.experience = experience;
+	}
+
+	public String getCurrentJob() {
+		return currentJob;
+	}
+
+	public void setCurrentJob(String currentJob) {
+		this.currentJob = currentJob;
 	}
 
 	public Role getRole() {
