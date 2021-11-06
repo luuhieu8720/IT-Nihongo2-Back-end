@@ -2,6 +2,7 @@ package bkdn.pbl6.main.services;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -31,12 +32,7 @@ public class ReportServiceImpl implements ReportService {
 	public ArrayList<Report> getAll() {
 		ArrayList<ReportEntity> reportEntities = reportRepository.findAll();
 
-		ArrayList<Report> reports = new ArrayList<>(reportEntities.size());
-		for (ReportEntity reportEntity : reportEntities) {
-			reports.add(new Report(reportEntity));
-		}
-
-		return reports;
+		return toModel(reportEntities);
 	}
 
 	@Override
@@ -45,7 +41,18 @@ public class ReportServiceImpl implements ReportService {
 		if (optional.isEmpty())
 			throw new Exception("Not found!");
 
-		return new Report(optional.get());
+		ReportEntity entity = optional.get();
+		Report report = new Report(entity);
+
+		String idUser = entity.getIdUser();
+		AccountEntity userAccountEntity = accountRepository.findById(idUser).get();
+		report.setUserName(userAccountEntity.getUsername());
+
+		String idTutor = entity.getIdTutor();
+		AccountEntity tutorAccountEntity = accountRepository.findById(idTutor).get();
+		report.setTutorName(tutorAccountEntity.getUsername());
+
+		return report;
 	}
 
 	@Override
@@ -88,12 +95,7 @@ public class ReportServiceImpl implements ReportService {
 
 		ArrayList<ReportEntity> reportEntities = new ArrayList<>(reportRepository.findAll(example));
 
-		ArrayList<Report> reports = new ArrayList<>(reportEntities.size());
-		for (ReportEntity reportEntity : reportEntities) {
-			reports.add(new Report(reportEntity));
-		}
-
-		return reports;
+		return toModel(reportEntities);
 	}
 
 	@Override
@@ -106,7 +108,42 @@ public class ReportServiceImpl implements ReportService {
 
 		reportEntity = reportRepository.save(reportEntity);
 
-		return new Report(reportEntity);
+		report.setId(reportEntity.getId());
+
+		return report;
+	}
+
+	private ArrayList<Report> toModel(ArrayList<ReportEntity> entities) {
+		TreeMap<String, AccountEntity> tree = new TreeMap<>();
+		ArrayList<Report> models = new ArrayList<>(entities.size());
+		for (ReportEntity entity : entities) {
+			try {
+				Report report = new Report(entity);
+
+				String idUser = entity.getIdUser();
+				if (tree.containsKey(idUser)) {
+					report.setUserName(tree.get(idUser).getUsername());
+				} else {
+					AccountEntity accountEntity = accountRepository.findById(idUser).get();
+					report.setUserName(accountEntity.getUsername());
+					tree.put(idUser, accountEntity);
+				}
+
+				String idTutor = entity.getIdTutor();
+				if (tree.containsKey(idTutor)) {
+					report.setTutorName(tree.get(idTutor).getUsername());
+				} else {
+					AccountEntity accountEntity = accountRepository.findById(idTutor).get();
+					report.setTutorName(accountEntity.getUsername());
+					tree.put(idTutor, accountEntity);
+				}
+
+				models.add(report);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return models;
 	}
 
 }
