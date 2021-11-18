@@ -12,4 +12,6 @@ public interface GroupChatMemberRepository extends MongoRepository<GroupChatMemb
 
 	GroupChatMemberEntity findByIdAndIdAccountNotLike(String id, String idAccount);
 
+	ArrayList<GroupChatMemberEntity> findByIdGroup(String idGroup);
+
 }

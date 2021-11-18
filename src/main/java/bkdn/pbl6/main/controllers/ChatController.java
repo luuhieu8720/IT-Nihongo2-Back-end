@@ -26,13 +26,13 @@ public class ChatController {
 	@Autowired
 	private ChatService chatService;
 
-	@MessageMapping(value = "/groupchat/get")
-	public void socketGetGroupchat(@Nullable GroupChat groupChat, Principal principal) {
-		if (groupChat != null) {
-
-		}
-		ApiResponse api = getGroupchat(principal.getName());
-		template.convertAndSendToUser(principal.getName(), "/queue/", api);
+	@MessageMapping(value = "/groupchat/all")
+	public void socketGetGroupchat(/* @Nullable GroupChat groupChat, */Principal principal) {
+//		if (groupChat != null) {
+//
+//		}
+		ApiResponse response = getGroupchat(principal.getName());
+		template.convertAndSendToUser(principal.getName(), "/queue/group/all", response);
 		return;
 	}
 
@@ -40,6 +40,15 @@ public class ChatController {
 		try {
 			ArrayList<GroupChat> groupChats = chatService.getAllGroup(username);
 			return new ApiResponse(true, groupChats);
+		} catch (Exception e) {
+			return new ApiResponse(false, e.getMessage());
+		}
+	}
+
+	private ApiResponse getGroupChat(GroupChat groupChat) {
+		try {
+			groupChat = chatService.getGroup(groupChat);
+			return new ApiResponse(true, groupChat);
 		} catch (Exception e) {
 			return new ApiResponse(false, e.getMessage());
 		}
@@ -56,7 +65,7 @@ public class ChatController {
 			groupChat.getMembers().add(me);
 		}
 		ApiResponse api = newGroupchat(groupChat);
-		template.convertAndSendToUser(principal.getName(), "/queue/", api);
+		template.convertAndSendToUser(principal.getName(), "/queue/group", api);
 		return;
 	}
 
@@ -71,8 +80,30 @@ public class ChatController {
 
 	@MessageMapping(value = "/chat/send")
 	public void socketSendChat(Chat chat, Principal principal) {
-
+		try {
+			chat.setUsername(principal.getName());
+			ApiResponse sendChat = sendChat(chat);
+			if (sendChat.getSuccess()) {
+				chat = (Chat) sendChat.getValue();
+				GroupChat groupChat = new GroupChat();
+				groupChat.setId(chat.getIdGroup());
+				groupChat = chatService.getGroup(groupChat);
+				for (Member member : groupChat.getMembers()) {
+					template.convertAndSendToUser(member.getUsername(), "/queue/chat/new", chat);
+				}
+			}
+		} catch (Exception e) {
+		}
 		return;
+	}
+
+	private ApiResponse sendChat(Chat chat) {
+		try {
+			chat = chatService.sendChat(chat);
+			return new ApiResponse(true, chat);
+		} catch (Exception e) {
+			return new ApiResponse(false, e.getMessage());
+		}
 	}
 
 }
