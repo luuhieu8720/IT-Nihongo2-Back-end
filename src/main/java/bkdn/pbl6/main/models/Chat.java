@@ -2,6 +2,8 @@ package bkdn.pbl6.main.models;
 
 import java.sql.Timestamp;
 
+import bkdn.pbl6.main.entities.ChatEntity;
+
 public class Chat {
 
 	private String idGroup;
@@ -23,6 +25,17 @@ public class Chat {
 		this.content = content;
 		this.index = index;
 		this.sendTime = sendTime;
+	}
+
+	public Chat(ChatEntity chatEntity) {
+		insert(chatEntity);
+	}
+
+	public void insert(ChatEntity chatEntity) {
+		this.idGroup = chatEntity.getIdGroup();
+		this.content = chatEntity.getContent();
+		this.sendTime = new Timestamp(chatEntity.getSendTime());
+		this.index = chatEntity.getIndex();
 	}
 
 	public String getIdGroup() {

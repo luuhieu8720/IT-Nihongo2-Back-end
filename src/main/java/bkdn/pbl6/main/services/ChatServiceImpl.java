@@ -1,8 +1,6 @@
 package bkdn.pbl6.main.services;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Optional;
 import java.util.TreeMap;
 
@@ -55,23 +53,24 @@ public class ChatServiceImpl implements ChatService {
 						.get();
 
 				if (groupChatEntity.getType() == Type.Pm) {
-					GroupChatMemberEntity to = groupMemberRepository
-							.findByIdAndIdAccountNotLike(groupChatEntity.getId(), accountEntity.getId());
-					String toId = to.getIdAccount();
-					if (tree.containsKey(toId)) {
-						groupChatEntity.setName(tree.get(toId).getName());
-					} else {
-						AccountEntity toAccount = accountRepository.findById(toId).get();
-						tree.put(toId, toAccount);
-						groupChatEntity.setName(toAccount.getName());
+					ArrayList<GroupChatMemberEntity> to = groupMemberRepository
+							.findByIdGroupAndIdAccountNotLike(groupChatEntity.getId(), accountEntity.getId());
+					if (to.size() == 1) {
+						String toId = to.get(0).getIdAccount();
+						if (tree.containsKey(toId)) {
+							groupChatEntity.setName(tree.get(toId).getName());
+						} else {
+							AccountEntity toAccount = accountRepository.findById(toId).get();
+							tree.put(toId, toAccount);
+							groupChatEntity.setName(toAccount.getName());
+						}
 					}
 				}
 
 				GroupChat groupChat = new GroupChat(groupChatEntity);
 				groupChats.add(groupChat);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				continue;
+				System.err.println(e.getMessage());
 			}
 		}
 
@@ -131,23 +130,32 @@ public class ChatServiceImpl implements ChatService {
 		if (optional.isEmpty()) {
 			throw new Exception("Group don't exits!");
 		}
-
 		groupChat = new GroupChat(optional.get());
 
 		ArrayList<GroupChatMemberEntity> groupChatMemberEntities = groupMemberRepository
-				.findByIdGroup(optional.get().getId());
+				.findByIdGroup(groupChat.getId());
 		ArrayList<Member> members = new ArrayList<>(groupChatMemberEntities.size());
+		TreeMap<String, String> map = new TreeMap<>();
 		for (GroupChatMemberEntity groupChatMemberEntity : groupChatMemberEntities) {
 			try {
 				AccountEntity accountEntity = accountRepository.findById(groupChatMemberEntity.getIdAccount()).get();
 				Member member = new Member(accountEntity.getUsername(), groupChatMemberEntity.getSeenIndex());
 				members.add(member);
+				map.put(accountEntity.getId(), accountEntity.getUsername());
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				continue;
+				System.err.println(e.getMessage());
 			}
 		}
 		groupChat.setMembers(members);
+
+		ArrayList<ChatEntity> chatEntities = chatRepository.findByIdGroupOrderByIndexAsc(groupChat.getId());
+		ArrayList<Chat> chats = new ArrayList<>(chatEntities.size());
+		for (ChatEntity entity : chatEntities) {
+			Chat chat = new Chat(entity);
+			chat.setUsername(map.get(entity.getIdAccount()));
+			chats.add(chat);
+		}
+		groupChat.setChats(chats);
 
 		return groupChat;
 	}
@@ -163,10 +171,9 @@ public class ChatServiceImpl implements ChatService {
 
 		AccountEntity accountEntity = accountRepository.findByUsername(chat.getUsername());
 
-		ChatEntity chatEntity = new ChatEntity();
-		chatEntity.setContent(chat.getContent());
+		ChatEntity chatEntity = new ChatEntity(chat);
 		chatEntity.setIdAccount(accountEntity.getId());
-		chatEntity.setSendTime(Timestamp.from(new Date().toInstant()));
+		chatEntity.setSendTime(System.currentTimeMillis());
 		chatEntity.setIndex(groupChatEntity.getLength() + 1);
 
 		chatEntity = chatRepository.save(chatEntity);
@@ -174,8 +181,7 @@ public class ChatServiceImpl implements ChatService {
 		groupChatEntity.setLength(chatEntity.getIndex());
 		groupChatRepository.save(groupChatEntity);
 
-		chat.setSendTime(chatEntity.getSendTime());
-		chat.setIndex(chatEntity.getIndex());
+		chat.insert(chatEntity);
 
 		return chat;
 	}

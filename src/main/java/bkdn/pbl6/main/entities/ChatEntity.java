@@ -1,9 +1,9 @@
 package bkdn.pbl6.main.entities;
 
-import java.sql.Timestamp;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import bkdn.pbl6.main.models.Chat;
 
 @Document(collection = "chat")
 public class ChatEntity {
@@ -11,23 +11,31 @@ public class ChatEntity {
 	@Id
 	private String id;
 
+	private String idGroup;
+
 	private Integer index;
 
 	private String idAccount;
 
 	private String content;
 
-	private Timestamp sendTime;
+	private Long sendTime;
 
 	public ChatEntity() {
 	}
 
-	public ChatEntity(String id, Integer index, String idAccount, String content, Timestamp sendTime) {
+	public ChatEntity(String id, String idGroup, Integer index, String idAccount, String content, Long sendTime) {
 		this.id = id;
+		this.idGroup = idGroup;
 		this.index = index;
 		this.idAccount = idAccount;
 		this.content = content;
 		this.sendTime = sendTime;
+	}
+
+	public ChatEntity(Chat chat) {
+		this.idGroup = chat.getIdGroup();
+		this.content = chat.getContent();
 	}
 
 	public String getId() {
@@ -36,6 +44,14 @@ public class ChatEntity {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getIdGroup() {
+		return idGroup;
+	}
+
+	public void setIdGroup(String idGroup) {
+		this.idGroup = idGroup;
 	}
 
 	public Integer getIndex() {
@@ -62,11 +78,11 @@ public class ChatEntity {
 		this.content = content;
 	}
 
-	public Timestamp getSendTime() {
+	public Long getSendTime() {
 		return sendTime;
 	}
 
-	public void setSendTime(Timestamp sendTime) {
+	public void setSendTime(Long sendTime) {
 		this.sendTime = sendTime;
 	}
 

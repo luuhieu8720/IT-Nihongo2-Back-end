@@ -14,14 +14,17 @@ public class GroupChat {
 
 	private Integer length;
 
+	private ArrayList<Chat> chats;
+
 	public GroupChat() {
 	}
 
-	public GroupChat(String id, String name, ArrayList<Member> members, Integer length) {
+	public GroupChat(String id, String name, ArrayList<Member> members, Integer length, ArrayList<Chat> chats) {
 		this.id = id;
 		this.name = name;
 		this.members = members;
 		this.length = length;
+		this.chats = chats;
 	}
 
 	public GroupChat(GroupChatEntity groupChatEntity) {
@@ -64,6 +67,14 @@ public class GroupChat {
 
 	public void setLength(Integer length) {
 		this.length = length;
+	}
+
+	public ArrayList<Chat> getChats() {
+		return chats;
+	}
+
+	public void setChats(ArrayList<Chat> chats) {
+		this.chats = chats;
 	}
 
 }
