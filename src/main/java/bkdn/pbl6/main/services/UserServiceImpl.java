@@ -191,6 +191,8 @@ public class UserServiceImpl implements UserService {
 				dataEntity.setExperience(data.getExperience());
 			if (data.getCurrentJob() != null)
 				dataEntity.setCurrentJob(data.getCurrentJob());
+			if (data.getTeachingMethod() != null)
+				dataEntity.setTeachingMethod(data.getTeachingMethod());
 		}
 		dataEntity = dataRepository.save(dataEntity);
 

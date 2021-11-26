@@ -38,6 +38,8 @@ public class Data {
 
 	private String currentJob;
 
+	private String teachingMethod;
+
 	private Role role;
 
 	public Data() {
@@ -45,7 +47,7 @@ public class Data {
 
 	public Data(String username, String email, String name, String telephone, String address, Gender gender,
 			String avatar, String specialty, String degree, String studentId, Integer age, String dateOfBirth,
-			String experience, String currentJob, Role role) {
+			String experience, String currentJob, String teachingMethod, Role role) {
 		super();
 		this.username = username;
 		this.email = email;
@@ -61,6 +63,7 @@ public class Data {
 		this.dateOfBirth = dateOfBirth;
 		this.experience = experience;
 		this.currentJob = currentJob;
+		this.teachingMethod = teachingMethod;
 		this.role = role;
 	}
 
@@ -96,6 +99,7 @@ public class Data {
 		this.dateOfBirth = dataEntity.getDateOfBirth();
 		this.experience = dataEntity.getExperience();
 		this.currentJob = dataEntity.getCurrentJob();
+		this.teachingMethod = dataEntity.getTeachingMethod();
 	}
 
 	public String getUsername() {
@@ -208,6 +212,14 @@ public class Data {
 
 	public void setCurrentJob(String currentJob) {
 		this.currentJob = currentJob;
+	}
+
+	public String getTeachingMethod() {
+		return teachingMethod;
+	}
+
+	public void setTeachingMethod(String teachingMethod) {
+		this.teachingMethod = teachingMethod;
 	}
 
 	public Role getRole() {
