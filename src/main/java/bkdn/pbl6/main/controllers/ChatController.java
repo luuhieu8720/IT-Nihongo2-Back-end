@@ -93,11 +93,14 @@ public class ChatController {
 				groupChat.setId(chat.getIdGroup());
 				groupChat = chatService.getGroup(groupChat);
 				for (Member member : groupChat.getMembers()) {
-					template.convertAndSendToUser(member.getUsername(), "/queue/chat/receive", chat);
+					template.convertAndSendToUser(member.getUsername(), "/queue/chat/receive", sendChat);
 				}
+			} else {
+				template.convertAndSendToUser(principal.getName(), "/queue/chat/receive", sendChat);
 			}
 		} catch (Exception e) {
-			template.convertAndSendToUser(principal.getName(), "/queue/chat/receive", e.getMessage());
+			template.convertAndSendToUser(principal.getName(), "/queue/chat/receive",
+					new ApiResponse(false, e.getMessage()));
 		}
 		return;
 	}
