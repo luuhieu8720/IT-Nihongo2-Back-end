@@ -183,6 +183,16 @@ public class UserServiceImpl implements UserService {
 				dataEntity.setSpecialty(data.getSpecialty());
 			if (data.getStudentId() != null)
 				dataEntity.setStudentId(data.getStudentId());
+			if (data.getAge() != null)
+				dataEntity.setAge(data.getAge());
+			if (data.getDateOfBirth() != null)
+				dataEntity.setDateOfBirth(data.getDateOfBirth());
+			if (data.getExperience() != null)
+				dataEntity.setExperience(data.getExperience());
+			if (data.getCurrentJob() != null)
+				dataEntity.setCurrentJob(data.getCurrentJob());
+			if (data.getTeachingMethod() != null)
+				dataEntity.setTeachingMethod(data.getTeachingMethod());
 		}
 		dataEntity = dataRepository.save(dataEntity);
 

@@ -34,6 +34,8 @@ public class DataEntity {
 
 	private String currentJob;
 
+	private String teachingMethod;
+
 	private String idAccount;
 
 	public DataEntity() {
@@ -41,7 +43,7 @@ public class DataEntity {
 
 	public DataEntity(String id, String telephone, String address, Gender gender, String avatar, String specialty,
 			String degree, String studentId, Integer age, String dateOfBirth, String experience, String currentJob,
-			String idAccount) {
+			String teachingMethod, String idAccount) {
 		super();
 		this.id = id;
 		this.telephone = telephone;
@@ -55,6 +57,7 @@ public class DataEntity {
 		this.dateOfBirth = dateOfBirth;
 		this.experience = experience;
 		this.currentJob = currentJob;
+		this.teachingMethod = teachingMethod;
 		this.idAccount = idAccount;
 	}
 
@@ -70,6 +73,7 @@ public class DataEntity {
 		this.dateOfBirth = data.getDateOfBirth();
 		this.experience = data.getExperience();
 		this.currentJob = data.getCurrentJob();
+		this.teachingMethod = data.getTeachingMethod();
 	}
 
 	public String getId() {
@@ -166,6 +170,14 @@ public class DataEntity {
 
 	public void setCurrentJob(String currentJob) {
 		this.currentJob = currentJob;
+	}
+
+	public String getTeachingMethod() {
+		return teachingMethod;
+	}
+
+	public void setTeachingMethod(String teachingMethod) {
+		this.teachingMethod = teachingMethod;
 	}
 
 	public String getIdAccount() {
