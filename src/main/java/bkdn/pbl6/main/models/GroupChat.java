@@ -77,4 +77,10 @@ public class GroupChat {
 		this.chats = chats;
 	}
 
+	@Override
+	public String toString() {
+		return "GroupChat [id=" + id + ", name=" + name + ", members=" + members + ", length=" + length + ", chats="
+				+ chats + "]";
+	}
+
 }

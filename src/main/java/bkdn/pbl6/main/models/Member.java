@@ -30,4 +30,9 @@ public class Member {
 		this.seenIndex = seenIndex;
 	}
 
+	@Override
+	public String toString() {
+		return "Member [username=" + username + ", seenIndex=" + seenIndex + "]";
+	}
+
 }
